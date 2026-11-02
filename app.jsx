@@ -8,9 +8,9 @@ const HERO_IMAGE =
   'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=1600&auto=format&fit=crop';
 
 const slides = [
-  { image: 'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=1600&auto=format&fit=crop', caption: 'One' },
-  { image: 'https://images.unsplash.com/photo-1781499455083-6ccc3beb20cd?q=80&w=1600&auto=format&fit=crop', caption: 'Two' },
-  { image: 'https://images.unsplash.com/photo-1776394254711-4a0d7345269a?q=80&w=1600&auto=format&fit=crop', caption: 'Three' }
+  { image: 'https://images.unsplash.com/photo-1782977389500-dd7adad33ebe?q=80&w=1600&auto=format&fit=crop', caption: 'Single-origin, roasted dark' },
+  { image: 'https://images.unsplash.com/photo-1781499455083-6ccc3beb20cd?q=80&w=1600&auto=format&fit=crop', caption: 'Poured slowly' },
+  { image: 'https://images.unsplash.com/photo-1776394254711-4a0d7345269a?q=80&w=1600&auto=format&fit=crop', caption: 'Served within ten days of roast' }
 ];
 
 const menu = [
@@ -28,6 +28,15 @@ const origins = [
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [fontReady, setFontReady] = useState(false);
+
+  // FluidGlass paints its text to a canvas, so wait for the serif to load first
+  useEffect(() => {
+    Promise.all([
+      document.fonts.load('500 100px "Cormorant Garamond"'),
+      document.fonts.load('600 100px "Cormorant Garamond"')
+    ]).finally(() => setFontReady(true));
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -52,6 +61,7 @@ export default function App() {
       {/* HERO: FluidGlass */}
       <section id="top" className="darko-hero">
         <FluidGlass
+          key={`hero-${fontReady}`}
           text="Darko"
           src={HERO_IMAGE}
           shape="torus"
@@ -167,6 +177,7 @@ export default function App() {
       {/* VISIT: second FluidGlass moment */}
       <section id="visit" className="darko-visit">
         <FluidGlass
+          key={`visit-${fontReady}`}
           text={'Come in\nfrom the cold.'}
           src={HERO_IMAGE}
           shape="lens"
